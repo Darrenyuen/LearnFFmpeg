@@ -45,7 +45,22 @@ android {
     }
     sourceSets {
         main {
-            jniLibs.srcDirs=['jniLibs']
+            jniLibs.srcDirs=['jniLibs', 'src/asan/jniLibs']
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            initWith debug
+            debuggable true
+            externalNativeBuild {
+                cmake {
+                    arguments "-DANDROID_ARM_MODE=arm", "-DANDROID_STL=c++_shared", "-DSANITIZE=asan"
+                }
+            }
         }
     }
 }
